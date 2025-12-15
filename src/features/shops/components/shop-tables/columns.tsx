@@ -9,47 +9,39 @@ export const columns: ColumnDef<Shop>[] = [
   {
     accessorKey: 'name',
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title='Name' />
+      <DataTableColumnHeader column={column} title="Name" />
     ),
-    enableColumnFilter: true,
-    filterFn: (row, id, value) =>
-      row
-        .getValue<string>(id)
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    meta: {
-      placeholder: 'Search shops...',
-      variant: 'text',
-      icon: Text
-    }
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'panNumber',
-    header: 'PAN Number'
-  },
-  {
-    accessorKey: 'isActive',
-    header: 'Is Active'
-  },
-  {
-    accessorKey: 'createdByType',
-    header: 'Created By'
-  },
-  {
-    accessorKey: 'district',
-    header: 'District'
-  },
-  {
-    accessorKey: 'state',
-    header: 'State'
-  },
-  {
-    accessorKey: 'pin',
-    header: 'Pin'
+    header: 'PAN Number',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'gstin',
-    header: 'GSTIN'
+    header: 'GSTIN',
+    enableGlobalFilter: true
+  },
+  {
+    accessorKey: 'district',
+    header: 'District',
+    enableGlobalFilter: true
+  },
+  {
+    accessorKey: 'state',
+    header: 'State',
+    enableGlobalFilter: true
+  },
+  {
+    accessorKey: 'pin',
+    header: 'Pin',
+    enableGlobalFilter: true
+  },
+  {
+    accessorKey: 'createdByType',
+    header: 'Created By',
+    enableGlobalFilter: true
   },
   {
     id: 'actions',

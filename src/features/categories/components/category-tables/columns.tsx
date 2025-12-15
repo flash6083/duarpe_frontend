@@ -11,17 +11,7 @@ export const columns: ColumnDef<Category>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    enableColumnFilter: true,
-    filterFn: (row, id, value) =>
-      row
-        .getValue<string>(id)
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    meta: {
-      placeholder: 'Search categories...',
-      variant: 'text',
-      icon: Text
-    }
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'summary',
@@ -30,11 +20,13 @@ export const columns: ColumnDef<Category>[] = [
       const summary = row.getValue('summary') as string;
 
       return <span className='block max-w-[200px] truncate'>{summary}</span>;
-    }
+    },
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'isActive',
-    header: 'Is Active'
+    header: 'Is Active',
+    enableGlobalFilter: true
   },
   {
     id: 'actions',

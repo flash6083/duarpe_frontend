@@ -11,17 +11,7 @@ export const columns: ColumnDef<subCategory>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    enableColumnFilter: true,
-    filterFn: (row, id, value) =>
-      row
-        .getValue<string>(id)
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    meta: {
-      placeholder: 'Search sub-categories...',
-      variant: 'text',
-      icon: Text
-    }
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'description',
@@ -32,7 +22,8 @@ export const columns: ColumnDef<subCategory>[] = [
       return (
         <span className='block max-w-[200px] truncate'>{description}</span>
       );
-    }
+    },
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'categoryName',
@@ -43,11 +34,13 @@ export const columns: ColumnDef<subCategory>[] = [
       return (
         <span className='block max-w-[200px] truncate'>{categoryName}</span>
       );
-    }
+    },
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'isActive',
-    header: 'Is Active'
+    header: 'Is Active',
+    enableGlobalFilter: true
   },
   {
     id: 'actions',

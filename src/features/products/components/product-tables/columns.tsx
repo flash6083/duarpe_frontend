@@ -12,17 +12,7 @@ export const columns: ColumnDef<Product>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    enableColumnFilter: true,
-    filterFn: (row, id, value) =>
-      row
-        .getValue<string>(id)
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    meta: {
-      placeholder: 'Search products...',
-      variant: 'text',
-      icon: Text
-    }
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'description',
@@ -33,7 +23,8 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <span className='block max-w-[200px] truncate'>{description}</span>
       );
-    }
+    },
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'summary',
@@ -42,7 +33,8 @@ export const columns: ColumnDef<Product>[] = [
       const summary = row.getValue('summary') as string;
 
       return <span className='block max-w-[200px] truncate'>{summary}</span>;
-    }
+    },
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'categoryName',
@@ -53,7 +45,8 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <span className='block max-w-[200px] truncate'>{categoryName}</span>
       );
-    }
+    },
+    enableGlobalFilter: true
   },
 
   {
@@ -65,11 +58,13 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <span className='block max-w-[200px] truncate'>{subcategoryName}</span>
       );
-    }
+    },
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'hsnCode',
-    header: 'HSN Code'
+    header: 'HSN Code',
+    enableGlobalFilter: true
   },
 
   {

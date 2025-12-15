@@ -29,7 +29,7 @@ export function useVariantColumns() {
           variant: 'text',
           icon: Text
         },
-        enableColumnFilter: true
+        enableGlobalFilter: true
       },
 
       // -------- THUMBNAIL IMAGE --------
@@ -50,7 +50,8 @@ export function useVariantColumns() {
               />
             </div>
           );
-        }
+        },
+
       },
 
       // -------- CATEGORY FILTER --------
@@ -90,7 +91,8 @@ export function useVariantColumns() {
           label: 'Sub-category',
           variant: 'multiSelect',
           options: subCategoryOptions // These already use IDs as values
-        }
+        },
+        enableGlobalFilter: true
       },
 
       // -------- DETAILS --------
@@ -101,17 +103,19 @@ export function useVariantColumns() {
           <span className='block max-w-[200px] truncate'>
             {row.getValue('details')}
           </span>
-        )
+        ),
+        enableGlobalFilter: true
       },
 
       // -------- PRICE FIELDS --------
       {
         accessorKey: 'mrp',
-        header: 'MRP'
+        header: 'MRP',
       },
       {
         accessorKey: 'discountedPrice',
-        header: 'Discounted Price'
+        header: 'Discounted Price',
+
       },
       {
         accessorKey: 'gstPercent',

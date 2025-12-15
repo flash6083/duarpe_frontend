@@ -11,33 +11,27 @@ export const columns: ColumnDef<ShopKeeper>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='Name' />
     ),
-    enableColumnFilter: true,
-    filterFn: (row, id, value) =>
-      row
-        .getValue<string>(id)
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    meta: {
-      placeholder: 'Search shops...',
-      variant: 'text',
-      icon: Text
-    }
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'phone',
-    header: 'Phone Number'
+    header: 'Phone Number',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'email',
-    header: 'Email Id'
+    header: 'Email Id',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'isActive',
-    header: 'Is Active'
+    header: 'Is Active',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'createdByType',
-    header: 'Created By'
+    header: 'Created By',
+    enableGlobalFilter: true
   },
   {
     id: 'actions',

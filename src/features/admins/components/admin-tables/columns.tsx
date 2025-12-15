@@ -2,7 +2,6 @@
 import { DataTableColumnHeader } from '@/components/ui/table/data-table-column-header';
 import { Admin } from '@/constants/data';
 import { ColumnDef } from '@tanstack/react-table';
-import { Text } from 'lucide-react';
 import { CellAction } from './cell-action';
 
 export const columns: ColumnDef<Admin>[] = [
@@ -11,37 +10,32 @@ export const columns: ColumnDef<Admin>[] = [
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title='First name' />
     ),
-    enableColumnFilter: true,
-    filterFn: (row, id, value) =>
-      row
-        .getValue<string>(id)
-        .toLowerCase()
-        .includes((value as string).toLowerCase()),
-    meta: {
-      placeholder: 'Search admins...',
-      variant: 'text',
-      icon: Text
-    }
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'lastName',
-    header: 'Last name'
+    header: 'Last name',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'email',
-    header: 'Email'
+    header: 'Email',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'phoneNumber',
-    header: 'Phone number'
+    header: 'Phone number',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'isActive',
-    header: 'Is active'
+    header: 'Is active',
+    enableGlobalFilter: true
   },
   {
     accessorKey: 'createdBy',
-    header: 'Created by'
+    header: 'Created by',
+    enableGlobalFilter: true
   },
   {
     id: 'actions',

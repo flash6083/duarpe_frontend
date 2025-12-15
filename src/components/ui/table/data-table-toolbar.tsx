@@ -22,7 +22,10 @@ export function DataTableToolbar<TData>({
   className,
   ...props
 }: DataTableToolbarProps<TData>) {
-  const isFiltered = table.getState().columnFilters.length > 0;
+  const isFiltered =
+  table.getState().columnFilters.length > 0 ||
+  !!table.getState().globalFilter;
+
 
   // Get all filterable columns - recalculate when columns actually change
   const allColumns = table.getAllColumns();
@@ -32,8 +35,10 @@ export function DataTableToolbar<TData>({
   );
 
   const onReset = React.useCallback(() => {
-    table.resetColumnFilters();
+  table.resetColumnFilters();
+  table.setGlobalFilter('');
   }, [table]);
+
 
   return (
     <div
@@ -46,6 +51,13 @@ export function DataTableToolbar<TData>({
       {...props}
     >
       <div className='flex flex-1 flex-wrap items-center gap-2'>
+          <Input
+            placeholder="Search data..."
+            value={(table.getState().globalFilter as string) ?? ''}
+            onChange={(event) => table.setGlobalFilter(event.target.value)}
+            className="h-8 w-64"
+        />
+
         {columns.map((column) => (
           <DataTableToolbarFilter key={column.id} column={column} />
         ))}
