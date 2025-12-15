@@ -21,6 +21,7 @@ import {
   ItemTitle
 } from '@/components/ui/item';
 import { Switch } from '@/components/ui/switch';
+import { INDIA_STATES_DISTRICTS } from '@/constants/india-states-districts';
 import { Shop } from '@/constants/data';
 import { formatDate } from '@/lib/format';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -91,6 +92,8 @@ export default function ShopForm({
     useState(false);
   const [shopkeeperSearch, setShopkeeperSearch] = useState('');
 
+
+
   const defaultValues: z.infer<typeof formSchema> = {
     id: initialData?.id ?? '',
     name: initialData?.name ?? '',
@@ -120,6 +123,26 @@ export default function ShopForm({
     resolver: zodResolver(formSchema),
     defaultValues
   });
+
+    /* ---------- STATE & DISTRICT DROPDOWNS ---------- */
+
+const [isStateDropdownOpen, setIsStateDropdownOpen] = useState(false);
+const [isDistrictDropdownOpen, setIsDistrictDropdownOpen] = useState(false);
+
+const [stateSearch, setStateSearch] = useState('');
+const [districtSearch, setDistrictSearch] = useState('');
+
+const selectedState = form.watch('state');
+
+const filteredStates = INDIA_STATES_DISTRICTS.filter((s) =>
+  s.state.toLowerCase().includes(stateSearch.toLowerCase())
+);
+
+const filteredDistricts =
+  INDIA_STATES_DISTRICTS.find((s) => s.state === selectedState)?.districts
+    .filter((d) =>
+      d.toLowerCase().includes(districtSearch.toLowerCase())
+    ) || [];
 
   /* ---------- LOAD ALL SHOPKEEPERS ---------- */
 
@@ -171,7 +194,7 @@ export default function ShopForm({
     formData.append('state', values.state);
     formData.append('pin', values.pin);
     formData.append('gstin', values.gstin);
-    formData.append('panNo', values.panNumber);
+    formData.append('panNumber', values.panNumber);
     formData.append('isActive', String(values.isActive));
     formData.append('geoPoint', JSON.stringify(values.geoPoint));
 
@@ -365,29 +388,107 @@ export default function ShopForm({
 
               <FormItem>
                 <FormLabel>Shop District</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Enter shop district'
-                    {...form.register('district')}
-                  />
-                </FormControl>
+
+                <div className='relative'>
+                  <button
+                    type='button'
+                    disabled={!selectedState}
+                    className='flex w-full items-center justify-between rounded border px-3 py-2 text-sm disabled:opacity-50'
+                    onClick={() =>
+                      setIsDistrictDropdownOpen((o) => !o)
+                    }
+                  >
+                    <span className='truncate'>
+                      {form.watch('district') || 'Select district'}
+                    </span>
+                    <span className='text-xs'>▼</span>
+                  </button>
+
+                  {isDistrictDropdownOpen && selectedState && (
+                    <div className='absolute z-20 mt-1 w-full rounded border bg-black shadow-md'>
+                      <input
+                        type='text'
+                        placeholder='Search district…'
+                        className='w-full border-b px-3 py-2 text-sm outline-none'
+                        value={districtSearch}
+                        onChange={(e) => setDistrictSearch(e.target.value)}
+                      />
+
+                      <div className='max-h-60 overflow-y-auto'>
+                        {filteredDistricts.map((d) => (
+                          <div
+                            key={d}
+                            className='cursor-pointer px-3 py-2 text-sm hover:bg-gray-700'
+                            onClick={() => {
+                              form.setValue('district', d);
+                              setIsDistrictDropdownOpen(false);
+                              setDistrictSearch('');
+                            }}
+                          >
+                            {d}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <FormMessage>
                   {form.formState.errors.district?.message}
                 </FormMessage>
               </FormItem>
 
+
               <FormItem>
                 <FormLabel>Shop State</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder='Enter shop state'
-                    {...form.register('state')}
-                  />
-                </FormControl>
+
+                <div className='relative'>
+                  <button
+                    type='button'
+                    className='flex w-full items-center justify-between rounded border px-3 py-2 text-sm'
+                    onClick={() => setIsStateDropdownOpen((o) => !o)}
+                  >
+                    <span className='truncate'>
+                      {selectedState || 'Select state'}
+                    </span>
+                    <span className='text-xs'>▼</span>
+                  </button>
+
+                  {isStateDropdownOpen && (
+                    <div className='absolute z-20 mt-1 w-full rounded border bg-black shadow-md'>
+                      <input
+                        type='text'
+                        placeholder='Search state…'
+                        className='w-full border-b px-3 py-2 text-sm outline-none'
+                        value={stateSearch}
+                        onChange={(e) => setStateSearch(e.target.value)}
+                      />
+
+                      <div className='max-h-60 overflow-y-auto'>
+                        {filteredStates.map((s) => (
+                          <div
+                            key={s.state}
+                            className='cursor-pointer px-3 py-2 text-sm hover:bg-gray-700'
+                            onClick={() => {
+                              form.setValue('state', s.state);
+                              form.setValue('district', '');
+                              setIsStateDropdownOpen(false);
+                              setStateSearch('');
+                            }}
+                          >
+                            {s.state}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+
                 <FormMessage>
                   {form.formState.errors.state?.message}
                 </FormMessage>
               </FormItem>
+
 
               <FormItem>
                 <FormLabel>Shop Pin</FormLabel>
@@ -425,6 +526,92 @@ export default function ShopForm({
                   {form.formState.errors.panNumber?.message}
                 </FormMessage>
               </FormItem>
+
+                {/* ✅ ASSIGNMENT UI */}
+            <div className='mt-8 md:col-span-2'>
+              <h3 className='mb-2 font-semibold'>Assign Shopkeepers</h3>
+
+              <div className='relative w-full max-w-md'>
+                {/* Button */}
+                <button
+                  type='button'
+                  className='flex w-full items-center justify-between rounded border px-3 py-2 text-sm'
+                  onClick={() => setIsShopkeeperDropdownOpen((o) => !o)}
+                >
+                  <span className='truncate'>
+                    {selectedShopkeepers.length === 0
+                      ? 'Select shopkeepers'
+                      : `${selectedShopkeepers.length} selected`}
+                  </span>
+                  <span className='cursor-pointer text-xs'>▼</span>
+                </button>
+
+                {/* Dropdown */}
+                {isShopkeeperDropdownOpen && (
+                  <div className='absolute z-20 mt-1 w-full rounded border bg-black shadow-md'>
+                    {/* Search input */}
+                    <input
+                      type='text'
+                      placeholder='Search by name…'
+                      className='w-full border-b px-3 py-2 text-sm outline-none'
+                      value={shopkeeperSearch}
+                      onChange={(e) => setShopkeeperSearch(e.target.value)}
+                    />
+
+                    {/* List */}
+                    <div className='max-h-64 overflow-y-auto'>
+                      {shopkeepers
+                        .filter((sk) =>
+                          sk.name
+                            ?.toLowerCase()
+                            .includes(shopkeeperSearch.toLowerCase())
+                        )
+                        .map((sk) => (
+                          <label
+                            key={sk.id}
+                            className='flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-700'
+                          >
+                            <input
+                              type='checkbox'
+                              checked={selectedShopkeepers.includes(sk.id)}
+                              onChange={() =>
+                                setSelectedShopkeepers((prev) =>
+                                  prev.includes(sk.id)
+                                    ? prev.filter((id) => id !== sk.id)
+                                    : [...prev, sk.id]
+                                )
+                              }
+                            />
+                            <span>{sk.name}</span>
+                          </label>
+                        ))}
+
+                      {shopkeepers.length > 0 &&
+                        shopkeepers.filter((sk) =>
+                          sk.name
+                            ?.toLowerCase()
+                            .includes(shopkeeperSearch.toLowerCase())
+                        ).length === 0 && (
+                          <p className='px-3 py-2 text-sm text-gray-400'>
+                            No matching shopkeepers
+                          </p>
+                        )}
+                    </div>
+
+                    {/* Footer */}
+                    <div className='cursor-pointer border-t px-3 py-2 text-right'>
+                      <button
+                        type='button'
+                        className='text-xs text-amber-500 hover:underline'
+                        onClick={() => setIsShopkeeperDropdownOpen(false)}
+                      >
+                        Done
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
 
               {/* File upload fields */}
               <FormField
@@ -548,91 +735,7 @@ export default function ShopForm({
               </FormItem>
             </div>
 
-            {/* ✅ ASSIGNMENT UI */}
-            <div className='mt-8 md:col-span-2'>
-              <h3 className='mb-2 font-semibold'>Assign Shopkeepers</h3>
-
-              <div className='relative w-full max-w-md'>
-                {/* Button */}
-                <button
-                  type='button'
-                  className='flex w-full items-center justify-between rounded border px-3 py-2 text-sm'
-                  onClick={() => setIsShopkeeperDropdownOpen((o) => !o)}
-                >
-                  <span className='truncate'>
-                    {selectedShopkeepers.length === 0
-                      ? 'Select shopkeepers'
-                      : `${selectedShopkeepers.length} selected`}
-                  </span>
-                  <span className='cursor-pointer text-xs'>▼</span>
-                </button>
-
-                {/* Dropdown */}
-                {isShopkeeperDropdownOpen && (
-                  <div className='absolute z-20 mt-1 w-full rounded border bg-black shadow-md'>
-                    {/* Search input */}
-                    <input
-                      type='text'
-                      placeholder='Search by name…'
-                      className='w-full border-b px-3 py-2 text-sm outline-none'
-                      value={shopkeeperSearch}
-                      onChange={(e) => setShopkeeperSearch(e.target.value)}
-                    />
-
-                    {/* List */}
-                    <div className='max-h-64 overflow-y-auto'>
-                      {shopkeepers
-                        .filter((sk) =>
-                          sk.name
-                            ?.toLowerCase()
-                            .includes(shopkeeperSearch.toLowerCase())
-                        )
-                        .map((sk) => (
-                          <label
-                            key={sk.id}
-                            className='flex cursor-pointer items-center gap-2 px-3 py-2 text-sm hover:bg-gray-700'
-                          >
-                            <input
-                              type='checkbox'
-                              checked={selectedShopkeepers.includes(sk.id)}
-                              onChange={() =>
-                                setSelectedShopkeepers((prev) =>
-                                  prev.includes(sk.id)
-                                    ? prev.filter((id) => id !== sk.id)
-                                    : [...prev, sk.id]
-                                )
-                              }
-                            />
-                            <span>{sk.name}</span>
-                          </label>
-                        ))}
-
-                      {shopkeepers.length > 0 &&
-                        shopkeepers.filter((sk) =>
-                          sk.name
-                            ?.toLowerCase()
-                            .includes(shopkeeperSearch.toLowerCase())
-                        ).length === 0 && (
-                          <p className='px-3 py-2 text-sm text-gray-400'>
-                            No matching shopkeepers
-                          </p>
-                        )}
-                    </div>
-
-                    {/* Footer */}
-                    <div className='cursor-pointer border-t px-3 py-2 text-right'>
-                      <button
-                        type='button'
-                        className='text-xs text-amber-500 hover:underline'
-                        onClick={() => setIsShopkeeperDropdownOpen(false)}
-                      >
-                        Done
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
+          
 
             <Button className='cursor-pointer' type='submit'>
               {pageTitle === 'Edit Shop' ? 'Update Shop' : 'Add Shop'}
