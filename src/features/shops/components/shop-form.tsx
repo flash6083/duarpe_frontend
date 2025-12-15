@@ -64,7 +64,7 @@ export const formSchema = z.object({
   pin: z.string().length(6).regex(/^\d+$/),
   geoPoint: z.object({ lat: z.number(), long: z.number() }),
   gstin: z.string().min(15),
-  panNo: z.string().length(10),
+  panNumber: z.string().length(10),
   isActive: z.boolean(),
 
   agreementImage: fileField('Agreement image'),
@@ -99,7 +99,7 @@ export default function ShopForm({
     pin: initialData?.pin ?? '',
     geoPoint: initialData?.geoPoint ?? { lat: 0, long: 0 },
     gstin: initialData?.gstin ?? '',
-    panNo: initialData?.panNo ?? '',
+    panNumber: initialData?.panNumber ?? '',
     isActive: initialData?.isActive ?? true,
 
     agreementImage: initialData?.agreementImage
@@ -171,7 +171,7 @@ export default function ShopForm({
     formData.append('state', values.state);
     formData.append('pin', values.pin);
     formData.append('gstin', values.gstin);
-    formData.append('panNo', values.panNo);
+    formData.append('panNo', values.panNumber);
     formData.append('isActive', String(values.isActive));
     formData.append('geoPoint', JSON.stringify(values.geoPoint));
 
@@ -418,11 +418,11 @@ export default function ShopForm({
                 <FormControl>
                   <Input
                     placeholder='Enter PAN number'
-                    {...form.register('panNo')}
+                    {...form.register('panNumber')}
                   />
                 </FormControl>
                 <FormMessage>
-                  {form.formState.errors.panNo?.message}
+                  {form.formState.errors.panNumber?.message}
                 </FormMessage>
               </FormItem>
 

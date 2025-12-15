@@ -65,7 +65,7 @@ export type Shop = {
   gstCertificateImage: string;
   shopPanCardImage: string;
   aadharCardImage: string;
-  panNo: string;
+  panNumber: string;
   isActive: boolean;
   createdById: string;
   createdByType: string;
