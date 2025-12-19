@@ -6,7 +6,6 @@ export default async function Page() {
   const cookieStore = await cookies();
   const sessionCookie = cookieStore.get('session');
   // eslint-disable-next-line no-console
-  console.log('Session Cookie:', sessionCookie);
 
   if (!sessionCookie) return redirect('/auth/sign-in');
 
